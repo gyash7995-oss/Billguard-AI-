@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildGuard AI — Construction Material Dashboard</title>
+  <meta name="description" content="AI-Powered Construction Material Accountability and Intelligence System. Connect what the camera sees with what the inventory expects.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+</head>
+<body>
+
+  <!-- ========================================================================
+       Top Navigation Bar
+       ======================================================================== -->
+  <header class="top-navbar" id="topNav">
+    <div class="nav-left-group">
+      <!-- Logo -->
+      <a class="brand-logo" onclick="switchTab('dashboard')" id="brandLogoBtn" title="BuildGuard AI Home">
+        <div class="brand-icon-wrapper">
+          <!-- Stylized Shield / Polygon Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L3 7V13C3 18.52 7.02 23.36 12 24C16.98 23.36 21 18.52 21 13V7L12 2Z" fill="#ffffff" fill-opacity="0.25"/>
+            <path d="M12 4.5L5 8.5V13C5 17.2 8.1 21.05 12 21.85C15.9 21.05 19 17.2 19 13V8.5L12 4.5Z" fill="#ffffff"/>
+            <path d="M12 8L8 10.5V14.5L12 17L16 14.5V10.5L12 8Z" fill="#2563eb"/>
+          </svg>
+        </div>
+        <span class="brand-name">BuildGuard AI</span>
+      </a>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-links-container" aria-label="Main Navigation">
+        <button class="nav-tab-item active" data-tab="dashboard" id="tabBtnDashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="7" height="9" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="5" rx="1.5"></rect>
+            <rect x="14" y="12" width="7" height="9" rx="1.5"></rect>
+            <rect x="3" y="16" width="7" height="5" rx="1.5"></rect>
+          </svg>
+          Dashboard
+        </button>
+
+        <button class="nav-tab-item" data-tab="live" id="tabBtnLive">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M23 7l-7 5 7 5V7z"></path>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+          Live Monitoring
+        </button>
+
+        <button class="nav-tab-item" data-tab="alerts" id="tabBtnAlerts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          Alerts
+          <span class="tab-badge" id="alertsCounter">3</span>
+        </button>
+
+        <button class="nav-tab-item" data-tab="inventory" id="tabBtnInventory">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          Inventory
+        </button>
+
+        <button class="nav-tab-item" data-tab="sitemap" id="tabBtnSitemap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          Site Map
+        </button>
+
+        <button class="nav-tab-item" data-tab="movement" id="tabBtnMovement">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+          Movement
+        </button>
+
+        <button class="nav-tab-item" data-tab="wastage" id="tabBtnWastage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+          Wastage
+        </button>
+      </nav>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="nav-right-group">
+      <!-- Site Selector Dropdown -->
+      <div style="position: relative;">
+        <button class="site-selector-pill" id="siteSelectorBtn" onclick="toggleSiteDropdown()" aria-haspopup="true">
+          <div class="site-name-row">
+            <span id="selectedSiteName">Site A — Main Project</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="site-status-row">
+            <span class="status-dot-green"></span>
+            <span>System Active</span>
+          </div>
+        </button>
+
+        <!-- Site Switcher Dropdown Menu -->
+        <div class="dropdown-menu-card" id="siteDropdownMenu">
+          <div class="dropdown-item active" onclick="selectSite('Site A — Main Project', 'Main Construction Site')">
+            <span class="dropdown-item-title">Site A — Main Project</span>
+            <span class="dropdown-item-sub">3 Zones • 14 Cameras Active</span>
+          </div>
+          <div class="dropdown-item" onclick="selectSite('Site B — Metro Extension', 'North Viaduct Segment')">
+            <span class="dropdown-item-title">Site B — Metro Extension</span>
+            <span class="dropdown-item-sub">2 Zones • 8 Cameras Active</span>
+          </div>
+          <div class="dropdown-item" onclick="selectSite('Site C — West Logistics Hub', 'Central Warehouse')">
+            <span class="dropdown-item-title">Site C — West Logistics Hub</span>
+            <span class="dropdown-item-sub">4 Zones • 18 Cameras Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification Bell -->
+      <div style="position: relative;">
+        <button class="nav-icon-btn" id="notifBellBtn" onclick="toggleNotifPanel()" title="System Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="btn-badge-dot"></span>
+        </button>
+
+        <!-- Notification Panel Dropdown -->
+        <div class="dropdown-menu-card" id="notifDropdownMenu" style="width: 320px;">
+          <div style="padding: 10px 12px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 13px; color: #0f172a;">Active Notifications</strong>
+            <span style="font-size: 11px; color: #2563eb; cursor: pointer;" onclick="markAllNotifsRead()">Mark read</span>
+          </div>
+          <div style="max-height: 260px; overflow-y: auto;">
+            <div class="dropdown-item" onclick="openEvidenceModal()">
+              <span class="dropdown-item-title" style="color: #ea580c;">⚠ Unaccounted Movement: 3 Cement Bags</span>
+              <span class="dropdown-item-sub">02:13 PM • Storage Area → Site Exit</span>
+            </div>
+            <div class="dropdown-item">
+              <span class="dropdown-item-title" style="color: #2563eb;">✓ Requisition Reconciled: 10 Cement Bags</span>
+              <span class="dropdown-item-sub">10:42 AM • Work Zone A</span>
+            </div>
+            <div class="dropdown-item">
+              <span class="dropdown-item-title" style="color: #64748b;">ℹ Daily Site Wastage Report Ready</span>
+              <span class="dropdown-item-sub">08:00 AM • Automated Summary</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Profile Avatar Button -->
+      <button class="user-avatar-btn" id="userProfileBtn" title="Site Manager: Yash Gupta" onclick="showToast('Logged in as Site Manager (DevSphereIndia)')">
+        <svg width="38" height="38" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="20" fill="#e2e8f0"/>
+          <circle cx="20" cy="15" r="7" fill="#64748b"/>
+          <path d="M8 35c0-6.627 5.373-12 12-12s12 5.373 12 12" fill="#64748b"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main Application Container
+       ======================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- ====================================================================
+         VIEW 1: PRIMARY DASHBOARD (Pixel-Accurate to Screenshot)
+         ==================================================================== -->
+    <section class="app-view active-view" id="view-dashboard">
+
+      <!-- Page Title & Site Status Row -->
+      <div class="dashboard-header-row">
+        <div class="header-title-block">
+          <h1>Construction Material Dashboard</h1>
+          <p>Real-time material accountability and site intelligence</p>
+        </div>
+        <div class="header-site-meta">
+          <div class="site-badge-header">
+            <span class="status-dot-green"></span>
+            <span id="headerSiteLabel">Site A — Main Construction Site</span>
+          </div>
+          <span class="site-status-text">System Active</span>
+        </div>
+      </div>
+
+      <!-- Top Section: 3 Overview Cards -->
+      <div class="top-overview-grid">
+
+        <!-- Card 1: Material Overview (Donut Chart & Legend) -->
+        <article class="dashboard-card material-overview-card" id="cardMaterialOverview">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+              </div>
+              <h2 class="card-title-text">Material Overview</h2>
+              <button class="info-icon-btn" title="Total material intake vs physical consumption, wastage, and remaining on site." onclick="showToast('Material Overview: Reconciled physical movement against purchase orders.')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="material-overview-content">
+            <!-- Donut Radial Chart -->
+            <div class="donut-chart-container">
+              <svg class="donut-svg" viewBox="0 0 100 100">
+                <!-- Gray Remaining segment (20%) -->
+                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#cbd5e1" stroke-width="11" stroke-dasharray="238.76" stroke-dashoffset="0" stroke-linecap="round"></circle>
+                <!-- Orange Wasted segment (8%) -->
+                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#f97316" stroke-width="11" stroke-dasharray="19.1 238.76" stroke-dashoffset="-47.75" stroke-linecap="round"></circle>
+                <!-- Green Consumed segment (72%) -->
+                <circle cx="50" cy="50" r="38" fill="transparent" stroke="#10b981" stroke-width="11" stroke-dasharray="171.9 238.76" stroke-dashoffset="-66.85" stroke-linecap="round"></circle>
+                <!-- Blue Gradient Top Received arc segment -->
+                <circle cx="50" cy="50" r="38" fill="transparent" stroke="url(#donutBlueGrad)" stroke-width="11" stroke-dasharray="75 238.76" stroke-dashoffset="-160" stroke-linecap="round"></circle>
+                <defs>
+                  <linearGradient id="donutBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#2563eb"/>
+                    <stop offset="100%" stop-color="#3b82f6"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <!-- Center Text Inside Donut -->
+              <div class="donut-center-text">
+                <div class="donut-center-number">1,000</div>
+                <div class="donut-center-label">Total Material<br>Received</div>
+              </div>
+            </div>
+
+            <!-- Legend List -->
+            <div class="overview-legend-list">
+              <div class="legend-row">
+                <div class="legend-name-group">
+                  <span class="legend-bullet bullet-blue"></span>
+                  <span>Materials Received</span>
+                </div>
+                <div class="legend-values-group">
+                  <span class="legend-val-bold">1,000 units</span>
+                  <span class="legend-val-pct">(100%)</span>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-name-group">
+                  <span class="legend-bullet bullet-green"></span>
+                  <span>Materials Consumed</span>
+                </div>
+                <div class="legend-values-group">
+                  <span class="legend-val-bold">720 units</span>
+                  <span class="legend-val-pct">(72%)</span>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-name-group">
+                  <span class="legend-bullet bullet-orange"></span>
+                  <span>Materials Wasted</span>
+                </div>
+                <div class="legend-values-group">
+                  <span class="legend-val-bold">80 units</span>
+                  <span class="legend-val-pct">(8%)</span>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-name-group">
+                  <span class="legend-bullet bullet-gray"></span>
+                  <span>Remaining</span>
+                </div>
+                <div class="legend-values-group">
+                  <span class="legend-val-bold">200 units</span>
+                  <span class="legend-val-pct">(20%)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: Material Value -->
+        <article class="dashboard-card material-value-card" id="cardMaterialValue">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M6 12h.01M18 12h.01"></path>
+                </svg>
+              </div>
+              <h2 class="card-title-text">Material Value</h2>
+            </div>
+          </div>
+
+          <div class="big-stat-val">₹4.2L</div>
+          <div class="stat-subtext">Total tracked material value</div>
+
+          <!-- Potential Exposure Box: Styled like 2nd Reference Image -->
+          <div class="exposure-sub-banner dark-error-banner">
+            <div class="error-badge-circle">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </div>
+            <div class="error-banner-content">
+              <div class="error-banner-title-row">
+                <span class="error-banner-title">Potential exposure</span>
+                <span class="error-banner-val-accent">₹4,200</span>
+              </div>
+              <div class="error-banner-desc">Estimated — Requires verification</div>
+            </div>
+          </div>
+
+          <!-- Wastage Value Box -->
+          <div class="wastage-sub-banner">
+            <div class="wastage-banner-header">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Wastage value</span>
+            </div>
+            <div class="wastage-banner-val">₹3,360</div>
+          </div>
+        </article>
+
+        <!-- Card 3: Active Alert Card - Dark Crimson / Burgundy Aesthetics -->
+        <article class="dashboard-card active-alert-card" id="cardActiveAlert">
+          <div class="alert-top-badge-row">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="error-badge-circle">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </div>
+              <div class="alert-pill-badge">Active Alert</div>
+            </div>
+            <button class="alert-close-btn" onclick="dismissActiveAlert()" title="Dismiss Alert">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <h3 class="alert-headline-title">Unaccounted Material Movement</h3>
+          <div style="font-size: 12px; color: #cbd5e1; margin-top: -2px; margin-bottom: 10px; line-height: 1.35;">
+            Physical transfer detected without corresponding digital clearance pass.
+          </div>
+
+          <div class="alert-detail-box">
+            <div class="alert-material-left">
+              <div class="material-icon-box">
+                <!-- Cement Bag Icon -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2h12v4H6z"></path>
+                  <path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"></path>
+                  <circle cx="12" cy="13" r="3"></circle>
+                </svg>
+              </div>
+              <div>
+                <div class="alert-mat-title">3 cement bags</div>
+                <div class="alert-route-path">
+                  <span>Storage Area</span>
+                  <span class="arrow-orange">→</span>
+                  <span style="color: #fca5a5; font-weight: 700;">Site Exit</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert-exposure-right">
+              <div class="exposure-micro-label">Potential exposure:</div>
+              <div class="exposure-micro-amount">₹1,260</div>
+              <span class="dark-error-badge"><span class="badge-dot-x">✕</span> Requires Verification</span>
+            </div>
+          </div>
+
+          <div class="alert-footer-actions">
+            <div class="alert-timestamp">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>02:13 PM</span>
+            </div>
+            <div class="alert-btns-group">
+              <button class="btn-primary-view" id="btnViewEvidence" onclick="openEvidenceModal()">View Evidence</button>
+              <button class="btn-secondary-dismiss" id="btnDismissAlert" onclick="dismissActiveAlert()">Dismiss</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Middle Section: 4 Quick Metric Cards -->
+      <div class="metrics-quad-grid">
+
+        <!-- Metric 1: Materials Tracked -->
+        <div class="metric-stat-card">
+          <div class="metric-icon-square square-blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div class="metric-details-column">
+            <span class="metric-label-title">Materials Tracked</span>
+            <span class="metric-big-number">24</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Active Alerts -->
+        <div class="metric-stat-card" style="cursor: pointer;" onclick="switchTab('alerts')">
+          <div class="metric-icon-square square-red">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <div class="metric-details-column">
+            <span class="metric-label-title">Active Alerts</span>
+            <span class="metric-big-number">3</span>
+          </div>
+        </div>
+
+        <!-- Metric 3: Unaccounted Movements -->
+        <div class="metric-stat-card" style="cursor: pointer;" onclick="switchTab('movement')">
+          <div class="metric-icon-square square-orange">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <div class="metric-details-column">
+            <span class="metric-label-title">Unaccounted Movements</span>
+            <span class="metric-big-number">2</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Estimated Wastage -->
+        <div class="metric-stat-card" style="cursor: pointer;" onclick="switchTab('wastage')">
+          <div class="metric-icon-square square-purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 3h12M6 8h12M6 13h7M6 18h4"></path>
+              <path d="M13 13l4 8"></path>
+            </svg>
+          </div>
+          <div class="metric-details-column">
+            <span class="metric-label-title">Estimated Wastage</span>
+            <span class="metric-big-number">₹3,360</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Section: 2 Cards -->
+      <div class="bottom-activity-grid">
+
+        <!-- Left Bottom Card: Recent Material Movement -->
+        <article class="dashboard-card" id="cardRecentMovement">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="4" y1="21" x2="4" y2="14"></line>
+                  <line x1="4" y1="10" x2="4" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12" y2="3"></line>
+                  <line x1="20" y1="21" x2="20" y2="16"></line>
+                  <line x1="20" y1="12" x2="20" y2="3"></line>
+                  <line x1="1" y1="14" x2="7" y2="14"></line>
+                  <line x1="9" y1="8" x2="15" y2="8"></line>
+                  <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+              </div>
+              <h2 class="card-title-text">Recent Material Movement</h2>
+            </div>
+            <a class="link-view-all" onclick="switchTab('movement')">
+              <span>View All</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          <div class="movement-table-wrapper">
+            <table class="movement-clean-table" aria-label="Recent Material Movements Table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Material</th>
+                  <th>Quantity</th>
+                  <th>From → To</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentMovementsTbody">
+                <!-- Row 1 -->
+                <tr>
+                  <td class="td-time">10:42 AM</td>
+                  <td>
+                    <div class="td-material-cell">
+                      <div class="item-thumb-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M6 2h12v4H6z"></path>
+                          <path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"></path>
+                          <circle cx="12" cy="13" r="3"></circle>
+                        </svg>
+                      </div>
+                      <span>Cement Bags</span>
+                    </div>
+                  </td>
+                  <td class="td-quantity">10</td>
+                  <td class="td-zones">Storage <span class="zone-arrow">→</span> Work Zone A</td>
+                  <td>
+                    <span class="status-pill-badge badge-recorded">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      Recorded
+                    </span>
+                  </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr>
+                  <td class="td-time">12:18 PM</td>
+                  <td>
+                    <div class="td-material-cell">
+                      <div class="item-thumb-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <line x1="3" y1="21" x2="21" y2="3"></line>
+                          <line x1="7" y1="21" x2="21" y2="7"></line>
+                          <line x1="3" y1="17" x2="17" y2="3"></line>
+                        </svg>
+                      </div>
+                      <span>Steel Bars</span>
+                    </div>
+                  </td>
+                  <td class="td-quantity">5</td>
+                  <td class="td-zones">Storage <span class="zone-arrow">→</span> Work Zone B</td>
+                  <td>
+                    <span class="status-pill-badge badge-recorded">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      Recorded
+                    </span>
+                  </td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr style="background: #fffbf7;">
+                  <td class="td-time">02:13 PM</td>
+                  <td>
+                    <div class="td-material-cell">
+                      <div class="item-thumb-icon" style="background: #ffedd5; color: #ea580c;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M6 2h12v4H6z"></path>
+                          <path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"></path>
+                          <circle cx="12" cy="13" r="3"></circle>
+                        </svg>
+                      </div>
+                      <span style="color: #9a3412; font-weight: 700;">Cement Bags</span>
+                    </div>
+                  </td>
+                  <td class="td-quantity" style="color: #ea580c;">3</td>
+                  <td class="td-zones">Storage <span class="zone-arrow" style="color: #ea580c;">→</span> <strong style="color: #c2410c;">Site Exit</strong></td>
+                  <td>
+                    <span class="status-pill-badge badge-unaccounted" style="cursor: pointer;" onclick="openEvidenceModal()">
+                      <span class="badge-dot-x">✕</span>
+                      Unaccounted
+                    </span>
+                  </td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr>
+                  <td class="td-time">03:40 PM</td>
+                  <td>
+                    <div class="td-material-cell">
+                      <div class="item-thumb-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="3" width="7" height="7"></rect>
+                          <rect x="14" y="3" width="7" height="7"></rect>
+                          <rect x="14" y="14" width="7" height="7"></rect>
+                          <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                      </div>
+                      <span>Tile Boxes</span>
+                    </div>
+                  </td>
+                  <td class="td-quantity">2</td>
+                  <td class="td-zones">Storage <span class="zone-arrow">→</span> Work Zone A</td>
+                  <td>
+                    <span class="status-pill-badge badge-recorded">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      Recorded
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Right Bottom Card: Material Movement Insights -->
+        <article class="dashboard-card" id="cardMovementInsights">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
+              <h2 class="card-title-text">Material Movement Insights</h2>
+            </div>
+          </div>
+
+          <div class="insights-progress-list">
+            <!-- Cement -->
+            <div class="insight-progress-item">
+              <span class="insight-cat-name">Cement</span>
+              <div class="insight-track-bar">
+                <div class="insight-fill-bar fill-cement" style="width: 34%;"></div>
+              </div>
+              <span class="insight-pct-label">34%</span>
+            </div>
+
+            <!-- Steel -->
+            <div class="insight-progress-item">
+              <span class="insight-cat-name">Steel</span>
+              <div class="insight-track-bar">
+                <div class="insight-fill-bar fill-steel" style="width: 26%;"></div>
+              </div>
+              <span class="insight-pct-label">26%</span>
+            </div>
+
+            <!-- Bricks -->
+            <div class="insight-progress-item">
+              <span class="insight-cat-name">Bricks</span>
+              <div class="insight-track-bar">
+                <div class="insight-fill-bar fill-bricks" style="width: 18%;"></div>
+              </div>
+              <span class="insight-pct-label">18%</span>
+            </div>
+
+            <!-- Tiles -->
+            <div class="insight-progress-item">
+              <span class="insight-cat-name">Tiles</span>
+              <div class="insight-track-bar">
+                <div class="insight-fill-bar fill-tiles" style="width: 12%;"></div>
+              </div>
+              <span class="insight-pct-label">12%</span>
+            </div>
+
+            <!-- Others -->
+            <div class="insight-progress-item">
+              <span class="insight-cat-name">Others</span>
+              <div class="insight-track-bar">
+                <div class="insight-fill-bar fill-others" style="width: 10%;"></div>
+              </div>
+              <span class="insight-pct-label">10%</span>
+            </div>
+          </div>
+
+          <div class="insights-footer-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Based on tracked material movement</span>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- ====================================================================
+           COMBINED ON DASHBOARD: SITE MATERIAL ANALYTICS & VARIANCE TRENDS
+           ==================================================================== -->
+      <div class="dashboard-analytics-grid" id="dashboardAnalyticsSection">
+        <!-- Card 1: Weekly Consumption vs Variance Trend (1.8fr) -->
+        <article class="dashboard-card" id="cardWeeklyAnalytics">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <div class="card-icon-pill" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title-text">Daily Consumption vs Material Variance</h2>
+                <div class="card-subtitle-small">Tracked physical usage vs. unverified deviations across all 4 site zones</div>
+              </div>
+            </div>
+
+            <!-- Time Range Filter Pills -->
+            <div class="analytics-filter-pills">
+              <button class="filter-pill-btn active" onclick="setAnalyticsRange('7d', event)">Last 7 Days</button>
+              <button class="filter-pill-btn" onclick="setAnalyticsRange('30d', event)">30 Days</button>
+            </div>
+          </div>
+
+          <!-- Chart Area -->
+          <div class="analytics-bars-wrapper">
+            <div class="analytics-chart-legend">
+              <div class="chart-legend-item">
+                <span class="legend-color-dot" style="background: #2563eb;"></span>
+                <span>Verified Consumption</span>
+              </div>
+              <div class="chart-legend-item">
+                <span class="legend-color-dot" style="background: #f43f5e;"></span>
+                <span>Flagged Variance / Leakage</span>
+              </div>
+            </div>
+
+            <!-- Interactive Bar Chart Columns -->
+            <div class="analytics-bar-columns">
+              <!-- Monday -->
+              <div class="bar-day-col">
+                <div class="bar-dual-group" title="Mon: 140 Consumed, 2 Variance">
+                  <div class="bar-fill bar-consumed" style="height: 80px;"></div>
+                  <div class="bar-fill bar-variance" style="height: 8px;"></div>
+                </div>
+                <span class="bar-day-label">Mon</span>
+                <span class="bar-val-label">140</span>
+              </div>
+
+              <!-- Tuesday -->
+              <div class="bar-day-col">
+                <div class="bar-dual-group" title="Tue: 180 Consumed, 4 Variance">
+                  <div class="bar-fill bar-consumed" style="height: 100px;"></div>
+                  <div class="bar-fill bar-variance" style="height: 12px;"></div>
+                </div>
+                <span class="bar-day-label">Tue</span>
+                <span class="bar-val-label">180</span>
+              </div>
+
+              <!-- Wednesday -->
+              <div class="bar-day-col">
+                <div class="bar-dual-group" title="Wed: 210 Consumed, 1 Variance">
+                  <div class="bar-fill bar-consumed" style="height: 115px;"></div>
+                  <div class="bar-fill bar-variance" style="height: 6px;"></div>
+                </div>
+                <span class="bar-day-label">Wed</span>
+                <span class="bar-val-label">210</span>
+              </div>
+
+              <!-- Thursday -->
+              <div class="bar-day-col">
+                <div class="bar-dual-group" title="Thu: 160 Consumed, 3 Variance">
+                  <div class="bar-fill bar-consumed" style="height: 90px;"></div>
+                  <div class="bar-fill bar-variance" style="height: 10px;"></div>
+                </div>
+                <span class="bar-day-label">Thu</span>
+                <span class="bar-val-label">160</span>
+              </div>
+
+              <!-- Friday -->
+              <div class="bar-day-col">
+                <div class="bar-dual-group" title="Fri: 195 Consumed, 5 Variance">
+                  <div class="bar-fill bar-consumed" style="height: 108px;"></div>
+                  <div class="bar-fill bar-variance" style="height: 15px;"></div>
+                </div>
+                <span class="bar-day-label">Fri</span>
+                <span class="bar-val-label">195</span>
+              </div>
+
+              <!-- Saturday -->
+              <div class="bar-day-col">
+                <div class="bar-dual-group" title="Sat: 130 Consumed, 0 Variance">
+                  <div class="bar-fill bar-consumed" style="height: 75px;"></div>
+                  <div class="bar-fill bar-variance" style="height: 0px;"></div>
+                </div>
+                <span class="bar-day-label">Sat</span>
+                <span class="bar-val-label">130</span>
+              </div>
+
+              <!-- Today -->
+              <div class="bar-day-col bar-col-today">
+                <div class="bar-dual-group" title="Today: 205 Consumed, 3 Unaccounted">
+                  <div class="bar-fill bar-consumed-today" style="height: 114px;"></div>
+                  <div class="bar-fill bar-variance-today" style="height: 18px;"></div>
+                </div>
+                <span class="bar-day-label bar-today-tag">Today</span>
+                <span class="bar-val-label" style="color: #2563eb; font-weight: 700;">205</span>
+              </div>
+            </div>
+
+            <!-- KPI Row under Chart -->
+            <div class="analytics-kpi-footer">
+              <div class="kpi-mini-tile">
+                <span class="kpi-mini-label">7-Day Total Consumption</span>
+                <span class="kpi-mini-val">1,220 Units</span>
+              </div>
+              <div class="kpi-mini-tile">
+                <span class="kpi-mini-label">Flagged Variance</span>
+                <span class="kpi-mini-val" style="color: #f43f5e;">18 Units (1.4%)</span>
+              </div>
+              <div class="kpi-mini-tile">
+                <span class="kpi-mini-label">Net Site Material Efficiency</span>
+                <span class="kpi-mini-val" style="color: #10b981;">98.6%</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: Loss Prevention & Zone Risk Index (1fr) -->
+        <article class="dashboard-card" id="cardLossPrevention">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <div class="card-icon-pill" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title-text">Loss Prevention Index</h2>
+                <div class="card-subtitle-small">Vulnerability breakdown by checkpoint</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zone Risk Breakdown -->
+          <div class="zone-risk-list">
+            <div class="zone-risk-item">
+              <div class="zone-risk-info">
+                <span class="zone-risk-name">Site Exit Gate (CAM 02)</span>
+                <span class="zone-risk-score score-high">78% High Vigilance</span>
+              </div>
+              <div class="zone-risk-bar-track">
+                <div class="zone-risk-bar-fill fill-high" style="width: 78%;"></div>
+              </div>
+            </div>
+
+            <div class="zone-risk-item">
+              <div class="zone-risk-info">
+                <span class="zone-risk-name">Work Zone B Periphery</span>
+                <span class="zone-risk-score score-medium">34% Moderate</span>
+              </div>
+              <div class="zone-risk-bar-track">
+                <div class="zone-risk-bar-fill fill-medium" style="width: 34%;"></div>
+              </div>
+            </div>
+
+            <div class="zone-risk-item">
+              <div class="zone-risk-info">
+                <span class="zone-risk-name">Tower 1 Foundation</span>
+                <span class="zone-risk-score score-low">18% Controlled</span>
+              </div>
+              <div class="zone-risk-bar-track">
+                <div class="zone-risk-bar-fill fill-low" style="width: 18%;"></div>
+              </div>
+            </div>
+
+            <div class="zone-risk-item">
+              <div class="zone-risk-info">
+                <span class="zone-risk-name">Material Storage Yard</span>
+                <span class="zone-risk-score score-secure">12% Secure</span>
+              </div>
+              <div class="zone-risk-bar-track">
+                <div class="zone-risk-bar-fill fill-secure" style="width: 12%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dark Alert Banner like 2nd Reference Image -->
+          <div class="dark-error-banner" style="margin-top: 14px; margin-bottom: 0;">
+            <div class="error-badge-circle">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="error-banner-content">
+              <div class="error-banner-title-row">
+                <span class="error-banner-title">Exposure Prevented</span>
+                <span class="error-banner-val-accent">₹38,400</span>
+              </div>
+              <div class="error-banner-desc">Physical discrepancies caught & mitigated via real-time camera AI cross-checks this month.</div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================================
+         VIEW 2: LIVE MONITORING (1 Single Camera + Right-Side Live Report)
+         ==================================================================== -->
+    <section class="app-view" id="view-live">
+      <div class="module-header-banner">
+        <div>
+          <h2>Live CCTV & AI Detection Stream</h2>
+          <p>Real-time edge inference combining YOLOv8 object detection & ByteTrack tracking</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary-dismiss" onclick="toggleBoundingBoxes()" id="btnToggleBoxes">Toggle AI Overlays</button>
+          <button class="btn-primary-view" onclick="simulateNewDetection()">Trigger Simulated Event</button>
+        </div>
+      </div>
+
+      <div class="cctv-single-cam-grid">
+        <!-- Single Prominent Camera Column -->
+        <div class="single-camera-col">
+          <div class="single-cam-screen-card">
+            <div class="single-cam-canvas-wrapper" id="singleCamCanvasWrapper">
+              <!-- Real CCTV Video Stream for CAM 02 (Site Exit Gate) -->
+              <video id="activeSingleCctvVideo" src="videoo.mp4" autoplay loop muted playsinline></video>
+              <canvas id="activeSingleCctvCanvas" width="960" height="540"></canvas>
+              
+              <!-- CCTV Top HUD -->
+              <div class="cctv-hud-top">
+                <div class="cctv-hud-tag-pill">
+                  <span class="rec-pulse-dot"></span>
+                  <span id="cctvHudCamTitle">CAM 02 — Main Site Exit Gate</span>
+                </div>
+                <div class="cctv-hud-specs-pill">
+                  <span id="cctvLiveClock">2026-09-29 14:13:42 IST</span>
+                  <span class="hud-sep">•</span>
+                  <span>1080P 30FPS</span>
+                  <span class="hud-sep">•</span>
+                  <span>22ms YOLOv8</span>
+                </div>
+              </div>
+
+              <!-- Anomaly Banner Overlay on Camera Feed (like 2nd reference image) -->
+              <div class="cctv-alert-overlay" id="cctvAlertOverlay">
+                <div class="error-badge-circle">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </div>
+                <div class="overlay-text-col">
+                  <span class="overlay-title" id="cctvOverlayTitle">UNACCOUNTED MOVEMENT DETECTED — GATE PASS MISSING</span>
+                  <span class="overlay-desc" id="cctvOverlayDesc">3 cement bags tracked moving toward Site Exit Gate [ID: #BT-491]</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Camera Switcher Chips & Quick Actions beneath Camera -->
+            <div class="single-cam-controls-bar">
+              <div class="cam-chips-list">
+                <button class="cam-select-chip active" id="chipCam02" onclick="switchSingleCamera('cam02')">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #ea580c; display: inline-block;"></span>
+                  <span>CAM 02 (Exit Gate)</span>
+                  <span class="chip-alert-count">Alert</span>
+                </button>
+                <button class="cam-select-chip" id="chipCam01" onclick="switchSingleCamera('cam01')">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <span>CAM 01 (Storage Yard)</span>
+                </button>
+                <button class="cam-select-chip" id="chipCam03" onclick="switchSingleCamera('cam03')">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <span>CAM 03 (Tower 1)</span>
+                </button>
+                <button class="cam-select-chip" id="chipCam04" onclick="switchSingleCamera('cam04')">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <span>CAM 04 (Vehicle Bay)</span>
+                </button>
+              </div>
+
+              <div class="cam-actions-group">
+                <button class="cam-action-btn" onclick="openEvidenceModal()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  Inspect Evidence
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Live Report of What is Happening on That Camera -->
+        <div class="single-cam-report-col">
+          <div class="dashboard-card live-camera-report-card" id="cameraLiveReportCard">
+            <!-- Report Header -->
+            <div class="report-header-flex">
+              <div class="card-title-group">
+                <div class="card-icon-pill" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="card-title-text" id="reportCamTitle">Live Report: CAM 02</h2>
+                  <span class="report-subtitle" id="reportCamSubtitle">South Exit Gate • Physical Egress Monitoring</span>
+                </div>
+              </div>
+              <span class="live-stream-status-pill" id="reportLiveStatusPill">
+                <span class="rec-pulse-dot" style="background: #ea580c;"></span>
+                <span id="reportLiveStatusText">ANOMALY DETECTED</span>
+              </span>
+            </div>
+
+            <!-- Edge Telemetry Badges -->
+            <div class="report-telemetry-strip">
+              <div class="telemetry-chip">
+                <span class="chip-label">Inference Model</span>
+                <span class="chip-val">YOLOv8x + ByteTrack</span>
+              </div>
+              <div class="telemetry-chip">
+                <span class="chip-label">Frame Latency</span>
+                <span class="chip-val">22ms (30 FPS)</span>
+              </div>
+              <div class="telemetry-chip">
+                <span class="chip-label">Zone Status</span>
+                <span class="chip-val status-val-alert" id="reportZoneStatusVal">Breach Flagged</span>
+              </div>
+            </div>
+
+            <!-- Physical Frame Detections -->
+            <div class="report-section-block">
+              <div class="report-section-heading">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Current Frame Physical Detections</span>
+              </div>
+              <div class="detection-items-list" id="reportDetectionItemsList">
+                <div class="detection-item-row">
+                  <div class="item-name-tag">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #ea580c; display: inline-block;"></span>
+                    <span>3x Cement Bags (Ultratech 53G)</span>
+                  </div>
+                  <span class="item-conf-badge">94.6%</span>
+                </div>
+                <div class="detection-item-row">
+                  <div class="item-name-tag">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; display: inline-block;"></span>
+                    <span>1x Hand Utility Cart</span>
+                  </div>
+                  <span class="item-conf-badge">92.1%</span>
+                </div>
+                <div class="detection-item-row">
+                  <div class="item-name-tag">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                    <span>1x Handler / Worker (Vest #12)</span>
+                  </div>
+                  <span class="item-conf-badge">96.2%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ERP Cross-Check Alert Banner (like 2nd reference image) -->
+            <div class="dark-error-banner" id="reportErpBanner" style="margin-bottom: 12px;">
+              <div class="error-badge-circle">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </div>
+              <div class="error-banner-content">
+                <div class="error-banner-title-row">
+                  <span class="error-banner-title" id="reportErpTitle">ERP Reconciliation: Mismatch</span>
+                  <span class="error-banner-val-accent" id="reportErpExposure">₹1,260</span>
+                </div>
+                <div class="error-banner-desc" id="reportErpDesc">
+                  No digital gate pass issued for this interval (01:45 PM – 02:30 PM). Flagged as unauthorized removal.
+                </div>
+              </div>
+            </div>
+
+            <!-- Camera Event Stream -->
+            <div class="report-section-block" style="flex: 1; display: flex; flex-direction: column;">
+              <div class="report-section-heading">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span>Live Camera Event Timeline</span>
+              </div>
+              <div class="camera-timeline-list" id="reportCameraTimelineList">
+                <div class="timeline-event-item event-alert">
+                  <span class="timeline-time">02:13:42 PM</span>
+                  <span>Perimeter Line Crossed: 3 bags moved toward Exit without pass.</span>
+                </div>
+                <div class="timeline-event-item">
+                  <span class="timeline-time">02:12:48 PM</span>
+                  <span>ByteTrack #BT-491 acquired from storage corridor.</span>
+                </div>
+                <div class="timeline-event-item">
+                  <span class="timeline-time">02:08:15 PM</span>
+                  <span>Worker ID #12 passed checkpoint (Authorized).</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Response Actions Row -->
+            <div class="report-actions-row">
+              <button class="btn-primary-view" style="flex: 1; justify-content: center;" onclick="openEvidenceModal()">
+                <span>Inspect Evidence</span>
+              </button>
+              <button class="btn-secondary-dismiss" style="flex: 1; justify-content: center; background: #2b1219; color: #fecdd3; border-color: rgba(244, 63, 94, 0.4);" onclick="triggerSecurityAlert()">
+                <span>Alert Gate Security</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         VIEW 3: ALERTS MANAGEMENT
+         ==================================================================== -->
+    <section class="app-view" id="view-alerts">
+      <div class="module-header-banner">
+        <div>
+          <h2>Site Alerts & Verification Queue</h2>
+          <p>Discrepancies identified between physical visual observations and ERP transaction logs</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary-dismiss" onclick="filterAlerts('all')">All (3)</button>
+          <button class="btn-secondary-dismiss" onclick="filterAlerts('unaccounted')">Unaccounted (2)</button>
+          <button class="btn-secondary-dismiss" onclick="filterAlerts('wastage')">Wastage (1)</button>
+        </div>
+      </div>
+
+      <!-- Prominent Dark Error Alert Banner (Image 2 style) -->
+      <div class="dark-error-banner" style="margin-bottom: 14px;">
+        <div class="error-badge-circle">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+        <div class="error-banner-content">
+          <div class="error-banner-title-row">
+            <span class="error-banner-title">2 Unaccounted Material Movements Detected</span>
+            <span class="error-banner-val-accent">₹4,200 Total Exposure</span>
+          </div>
+          <div class="error-banner-desc">Physical transfer recorded without corresponding ERP digital gate clearance passes. Requires immediate security verification.</div>
+        </div>
+      </div>
+
+      <div class="dashboard-card" style="padding: 0; overflow: hidden;">
+        <table class="data-table-full">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Incident Type</th>
+              <th>Material</th>
+              <th>Quantity</th>
+              <th>Observed Vector</th>
+              <th>Est. Exposure</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="alertsTableBody">
+            <tr>
+              <td><strong>02:13 PM</strong><br><span style="font-size: 11px; color: #64748b;">Today</span></td>
+              <td><span class="dark-error-badge"><span class="badge-dot-x">✕</span> Unaccounted Movement</span></td>
+              <td>Cement Bags (Ultratech 53G)</td>
+              <td><strong>3 bags</strong></td>
+              <td>Storage Area → Site Exit</td>
+              <td><span class="dark-error-badge"><span class="badge-dot-x">✕</span> ₹1,260</span></td>
+              <td><span class="dark-error-badge"><span class="badge-dot-x">✕</span> Requires Verification</span></td>
+              <td>
+                <button class="btn-primary-view" style="padding: 6px 12px; font-size: 11.5px;" onclick="openEvidenceModal()">View Evidence</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>01:05 PM</strong><br><span style="font-size: 11px; color: #64748b;">Today</span></td>
+              <td><span class="dark-error-badge"><span class="badge-dot-x">✕</span> Unaccounted Movement</span></td>
+              <td>TMT Rebar 12mm</td>
+              <td><strong>2 bundles</strong></td>
+              <td>Work Zone B → Periphery Wall</td>
+              <td><span class="dark-error-badge"><span class="badge-dot-x">✕</span> ₹2,940</span></td>
+              <td><span class="dark-error-badge"><span class="badge-dot-x">✕</span> Requires Verification</span></td>
+              <td>
+                <button class="btn-primary-view" style="padding: 6px 12px; font-size: 11.5px;" onclick="showToast('Loading incident evidence #ALT-904...')">View Evidence</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>11:30 AM</strong><br><span style="font-size: 11px; color: #64748b;">Today</span></td>
+              <td><span style="color: #8b5cf6; font-weight: 700;">Material Wastage Spike</span></td>
+              <td>Glazed Vitrified Tiles</td>
+              <td><strong>4 damaged boxes</strong></td>
+              <td>Loading Bay Handling</td>
+              <td><strong style="color: #475569;">₹3,360</strong></td>
+              <td><span style="background: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Logged as Scrap</span></td>
+              <td>
+                <button class="btn-secondary-dismiss" style="padding: 5px 10px; font-size: 11.5px;" onclick="showToast('Wastage logged to site scrap register.')">Details</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         VIEW 4: INVENTORY
+         ==================================================================== -->
+    <section class="app-view" id="view-inventory">
+      <div class="module-header-banner">
+        <div>
+          <h2>Material Inventory Reconciliation Ledger</h2>
+          <p>Connecting purchase receipts with physical movement, consumption, and unaccounted variance</p>
+        </div>
+        <button class="btn-primary-view" onclick="showToast('Re-syncing with ERP purchase orders...')">Sync ERP Ledger</button>
+      </div>
+
+      <div class="dashboard-card" style="padding: 0; overflow: hidden;">
+        <table class="data-table-full">
+          <thead>
+            <tr>
+              <th>Material Name</th>
+              <th>Unit</th>
+              <th>Received</th>
+              <th>Consumed</th>
+              <th>Wasted</th>
+              <th>Remaining</th>
+              <th>Unaccounted</th>
+              <th>Unit Rate</th>
+              <th>Total Valuation</th>
+              <th>Reconciliation Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Portland Cement Bags (53G)</strong></td>
+              <td>Bags</td>
+              <td>500</td>
+              <td>380</td>
+              <td>12</td>
+              <td><strong>105</strong></td>
+              <td><strong style="color: #ea580c;">-3 bags</strong></td>
+              <td>₹420</td>
+              <td>₹2,10,000</td>
+              <td><span class="status-pill-badge badge-unaccounted">Variance Detected</span></td>
+            </tr>
+            <tr>
+              <td><strong>TMT Rebar Steel (12mm/16mm)</strong></td>
+              <td>Kg</td>
+              <td>350</td>
+              <td>240</td>
+              <td>38</td>
+              <td><strong>70</strong></td>
+              <td><strong style="color: #ea580c;">-2 bundles</strong></td>
+              <td>₹1,470</td>
+              <td>₹1,25,000</td>
+              <td><span class="status-pill-badge badge-unaccounted">Variance Detected</span></td>
+            </tr>
+            <tr>
+              <td><strong>Red Clay Bricks</strong></td>
+              <td>Units</td>
+              <td>100</td>
+              <td>75</td>
+              <td>15</td>
+              <td><strong>10</strong></td>
+              <td>0</td>
+              <td>₹8</td>
+              <td>₹45,000</td>
+              <td><span class="status-pill-badge badge-recorded">100% Reconciled</span></td>
+            </tr>
+            <tr>
+              <td><strong>Vitrified Ceramic Tiles</strong></td>
+              <td>Boxes</td>
+              <td>50</td>
+              <td>25</td>
+              <td>15</td>
+              <td><strong>10</strong></td>
+              <td>0</td>
+              <td>₹840</td>
+              <td>₹40,000</td>
+              <td><span class="status-pill-badge badge-recorded">100% Reconciled</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         VIEW 5: SITE MAP (Directional Movement & Zone Topology)
+         ==================================================================== -->
+    <section class="app-view" id="view-sitemap">
+      <div class="module-header-banner">
+        <div>
+          <h2>Logical Site Map & Movement Topology</h2>
+          <p>Physical construction zones and verified vs unverified movement vectors</p>
+        </div>
+      </div>
+
+      <div class="sitemap-visual-box">
+        <div class="zones-diagram-grid">
+          <!-- Zone: Material Storage -->
+          <div class="zone-block zone-storage" id="zoneStorage">
+            <div class="zone-block-header">
+              <span class="zone-block-title">📦 Material Storage Yard</span>
+              <span style="font-size: 11px; background: #dbeafe; color: #1d4ed8; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Origin Hub</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="zone-item-chip"><span>Cement Pallets</span><span>105 Bags</span></div>
+              <div class="zone-item-chip"><span>Steel Rebar</span><span>70 Kg</span></div>
+            </div>
+            <div style="font-size: 11px; color: #2563eb; font-weight: 600;">CCTV CAM-01 Active</div>
+          </div>
+
+          <!-- Zone: Loading Bay -->
+          <div class="zone-block" id="zoneLoading">
+            <div class="zone-block-header">
+              <span class="zone-block-title">🚛 Heavy Loading Bay</span>
+              <span style="font-size: 11px; background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Intake</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="zone-item-chip"><span>Last Delivery</span><span>09:15 AM</span></div>
+              <div class="zone-item-chip"><span>Carrier Reg</span><span>DL-01-AB-4921</span></div>
+            </div>
+            <div style="font-size: 11px; color: #64748b; font-weight: 600;">CCTV CAM-04 Active</div>
+          </div>
+
+          <!-- Zone: Work Zone A -->
+          <div class="zone-block" id="zoneWorkA">
+            <div class="zone-block-header">
+              <span class="zone-block-title">🏗 Work Zone A (Tower 1)</span>
+              <span style="font-size: 11px; background: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Active Pouring</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="zone-item-chip"><span>Material Consumed</span><span>380 Bags</span></div>
+              <div class="zone-item-chip"><span>Authorizations</span><span>4 Work Orders</span></div>
+            </div>
+            <div style="font-size: 11px; color: #10b981; font-weight: 600;">CCTV CAM-03 Active</div>
+          </div>
+
+          <!-- Zone: Work Zone B -->
+          <div class="zone-block" id="zoneWorkB">
+            <div class="zone-block-header">
+              <span class="zone-block-title">🏢 Work Zone B (Tower 2)</span>
+              <span style="font-size: 11px; background: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Slab Casting</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="zone-item-chip"><span>Steel Rebar Used</span><span>240 Kg</span></div>
+            </div>
+            <div style="font-size: 11px; color: #10b981; font-weight: 600;">Coverage Verified</div>
+          </div>
+
+          <!-- Zone: Site Exit Gate -->
+          <div class="zone-block zone-exit" id="zoneExit">
+            <div class="zone-block-header">
+              <span class="zone-block-title">🚪 Site Exit Gate</span>
+              <span class="dark-error-badge"><span class="badge-dot-x">✕</span> PERIMETER SENSITIVE</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="zone-item-chip" style="background: #251219; border-color: rgba(244, 63, 94, 0.4); color: #ffffff;">
+                <span style="display: flex; align-items: center; gap: 5px;"><span class="badge-dot-x" style="width: 12px; height: 12px; border-radius: 50%; background: #f43f5e; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 7.5px; font-weight: 900;">✕</span> Unaccounted Outflow</span>
+                <strong style="color: #ffffff;">3 Bags Cement</strong>
+              </div>
+            </div>
+            <div style="font-size: 11px; color: #f43f5e; font-weight: 600;">CCTV CAM-02 Flagged</div>
+          </div>
+
+          <!-- Zone: Quality Inspection & Scrap Yard -->
+          <div class="zone-block" id="zoneScrap">
+            <div class="zone-block-header">
+              <span class="zone-block-title">♻ Scrap & Wastage Bin</span>
+              <span style="font-size: 11px; background: #f3e8ff; color: #7e22ce; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Wastage Audited</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="zone-item-chip"><span>Recorded Scrap Value</span><span>₹3,360</span></div>
+            </div>
+            <div style="font-size: 11px; color: #8b5cf6; font-weight: 600;">Audited Weekly</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         VIEW 6: MOVEMENT AUDIT TRAIL
+         ==================================================================== -->
+    <section class="app-view" id="view-movement">
+      <div class="module-header-banner">
+        <div>
+          <h2>Material Movement Audit Trail</h2>
+          <p>Chronological trace of physical site movements cross-referenced with work tickets</p>
+        </div>
+        <button class="btn-primary-view" onclick="exportMovementReport()">Export Audit Log (CSV)</button>
+      </div>
+
+      <div class="dashboard-card" style="padding: 0; overflow: hidden;">
+        <table class="data-table-full">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Movement ID</th>
+              <th>Material</th>
+              <th>Quantity</th>
+              <th>Origin</th>
+              <th>Destination</th>
+              <th>Work Ticket / Requisition</th>
+              <th>Reconciliation Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>03:40 PM</td>
+              <td><code>#MOV-8841</code></td>
+              <td>Tile Boxes</td>
+              <td>2 boxes</td>
+              <td>Storage</td>
+              <td>Work Zone A</td>
+              <td><code>REQ-2026-088</code></td>
+              <td><span class="status-pill-badge badge-recorded">✓ Verified</span></td>
+            </tr>
+            <tr style="background: #fff7ed;">
+              <td>02:13 PM</td>
+              <td><code>#MOV-8840</code></td>
+              <td><strong>Cement Bags</strong></td>
+              <td><strong>3 bags</strong></td>
+              <td>Storage Area</td>
+              <td><strong>Site Exit</strong></td>
+              <td><span style="color: #dc2626; font-weight: 700;">No Requisition Found</span></td>
+              <td><span class="status-pill-badge badge-unaccounted">⚠ Unaccounted</span></td>
+            </tr>
+            <tr>
+              <td>12:18 PM</td>
+              <td><code>#MOV-8839</code></td>
+              <td>Steel Bars</td>
+              <td>5 bars</td>
+              <td>Storage</td>
+              <td>Work Zone B</td>
+              <td><code>REQ-2026-085</code></td>
+              <td><span class="status-pill-badge badge-recorded">✓ Verified</span></td>
+            </tr>
+            <tr>
+              <td>10:42 AM</td>
+              <td><code>#MOV-8838</code></td>
+              <td>Cement Bags</td>
+              <td>10 bags</td>
+              <td>Storage</td>
+              <td>Work Zone A</td>
+              <td><code>REQ-2026-081</code></td>
+              <td><span class="status-pill-badge badge-recorded">✓ Verified</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         VIEW 7: WASTAGE INTELLIGENCE
+         ==================================================================== -->
+    <section class="app-view" id="view-wastage">
+      <div class="module-header-banner">
+        <div>
+          <h2>Material Wastage & Inefficiency Intelligence</h2>
+          <p>Quantifying physical loss caused by improper handling, weathering, cutting scraps, and spills</p>
+        </div>
+      </div>
+
+      <div class="top-overview-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
+        <div class="dashboard-card">
+          <h3 class="card-title-text" style="margin-bottom: 12px;">Wastage by Cause</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+                <span>Handling / Breakage (Tiles & Bricks)</span>
+                <span>₹2,100 (62%)</span>
+              </div>
+              <div class="insight-track-bar"><div class="insight-fill-bar fill-bricks" style="width: 62%;"></div></div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+                <span>Cutting Scraps (TMT Steel Rebar)</span>
+                <span>₹840 (25%)</span>
+              </div>
+              <div class="insight-track-bar"><div class="insight-fill-bar fill-steel" style="width: 25%;"></div></div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+                <span>Moisture / Weathering (Cement)</span>
+                <span>₹420 (13%)</span>
+              </div>
+              <div class="insight-track-bar"><div class="insight-fill-bar fill-cement" style="width: 13%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="card-title-text" style="margin-bottom: 12px;">Financial Loss Prevention Suggestion</h3>
+          <div style="background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #edf2f7; font-size: 13.5px; line-height: 1.5;">
+            <p><strong>Storage Tarpaulin Alert:</strong> Cam-01 detected partial tarp displacement over Cement Pallet #4. Immediate refastening recommended prior to forecasted rain at 05:00 PM to prevent up to <strong>₹12,600</strong> in hydration loss.</p>
+            <button class="btn-primary-view" style="margin-top: 14px;" onclick="showToast('Notification dispatched to Site Storekeeper.')">Notify Storekeeper</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ========================================================================
+       MODAL: CCTV EVIDENCE INSPECTOR (YOLOv8 + ByteTrack Anomaly Details)
+       ======================================================================== -->
+  <div class="modal-overlay" id="evidenceModal" onclick="closeEvidenceModal(event)">
+    <div class="modal-content-card" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <div class="modal-title-left">
+          <span class="dark-error-badge">
+            <span class="badge-dot-x">✕</span>
+            INCIDENT #EV-2026-0929-3
+          </span>
+          <h3>Physical CCTV Evidence & Cross-Check</h3>
+        </div>
+        <button class="alert-close-btn" onclick="closeEvidenceModalDirect()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body-container">
+        <!-- Dark Error Banner (Image 2 style) inside modal -->
+        <div class="dark-error-banner" style="margin-bottom: 14px;">
+          <div class="error-badge-circle">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </div>
+          <div class="error-banner-content">
+            <div class="error-banner-title-row">
+              <span class="error-banner-title">Security Alert: Unaccounted Transfer Flagged</span>
+              <span class="error-banner-val-accent">₹1,260 Exposure</span>
+            </div>
+            <div class="error-banner-desc">Physical movement detected at CAM 02 South Exit Gate with zero digital clearance pass. Requires manual supervisor verification.</div>
+          </div>
+        </div>
+
+        <!-- CCTV Frame Screen with Real Video -->
+        <div class="evidence-video-screen">
+          <video id="evidenceSnapshotVideo" src="videoo.mp4" autoplay loop muted playsinline></video>
+          <canvas id="evidenceSnapshotCanvas" width="800" height="450" class="evidence-cctv-canvas"></canvas>
+          <div class="cctv-top-hud">
+            <div class="hud-cam-tag">
+              <span class="rec-pulse-dot"></span>
+              <span>CAM 02 [SOUTH GATE EXIT] • 1080P 30FPS</span>
+            </div>
+            <div>2026-09-29 14:13:42 IST</div>
+          </div>
+          <!-- YOLOv8 Bounding Box Simulation -->
+          <div class="cctv-bounding-box-demo">
+            <span class="box-tag-label">YOLOv8: cement_bag (x3) 94%</span>
+          </div>
+        </div>
+
+        <!-- Incident Metadata Breakdown -->
+        <div class="evidence-meta-grid">
+          <div class="meta-info-tile">
+            <span class="meta-tile-label">Detected Physical Event</span>
+            <div class="meta-tile-value">3 Cement Bags Moving Toward Exit</div>
+            <div style="font-size: 11.5px; color: #64748b; margin-top: 3px;">ByteTrack Trajectory ID: <code>#BT-491</code></div>
+          </div>
+
+          <div class="meta-info-tile">
+            <span class="meta-tile-label">ERP / Requisition Cross-Check</span>
+            <div class="meta-tile-value" style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+              <span class="dark-error-badge"><span class="badge-dot-x">✕</span> No Matching Requisition Found</span>
+            </div>
+            <div style="font-size: 11.5px; color: #64748b; margin-top: 5px;">Checked interval 01:45 PM – 02:30 PM</div>
+          </div>
+
+          <div class="meta-info-tile">
+            <span class="meta-tile-label">Quantified Potential Exposure</span>
+            <div class="meta-tile-value" style="color: #0f172a; font-weight: 800; font-size: 18px;">₹1,260 <span style="font-size: 12px; font-weight: 500; color: #64748b;">(₹420/bag)</span></div>
+            <div style="margin-top: 4px;">
+              <span class="dark-error-badge"><span class="badge-dot-x">✕</span> Requires Verification</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 12px; padding: 14px; border: 1px solid #e2e8f0; font-size: 13px; color: #334155;">
+          <strong>BuildGuard AI Recommendation:</strong>
+          Physical movement was tracked past checkpoint <strong>Zone Gate 02</strong> without digital dispatch clearance. Contact Site Security Gate 2 or verify if this transfer belongs to emergency subcontractor requisition.
+        </div>
+      </div>
+
+      <div class="modal-footer-bar">
+        <button class="btn-secondary-dismiss" onclick="markIncidentAuthorized()">Mark as Authorized Dispatch</button>
+        <button class="btn-secondary-dismiss" onclick="flagFalsePositive()">Flag False Positive</button>
+        <button class="btn-primary-view" onclick="verifyAndEscalate()">Verify & Escalate Incident</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Hub -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Javascript Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
